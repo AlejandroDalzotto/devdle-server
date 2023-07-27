@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 import database from '../database/connection'
 
-const Icontypes = database.define('Icontypes', {
+export const Icontypes = database.define('Icontypes', {
   name: {
     primaryKey: true,
     type: DataTypes.STRING({ length: 45 }),
