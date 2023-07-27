@@ -11,3 +11,19 @@ export const getAllIcons = async (_req: Request, res: Response): Promise<void> =
     })
   }
 }
+
+export const saveIcon = async (req: Request, res: Response): Promise<void> => {
+  const { title, name, url, color, description, type, docs, usage } = req.body
+
+  try {
+    const result = await Icon.create({ title, name, url, color, description, icon_type: type, docs, usage })
+    res.status(201).json({
+      msg: 'Icon submitted to database',
+      icon: result
+    })
+  } catch (error) {
+    res.status(400).json({
+      msg: (error as Error).message
+    })
+  }
+}
