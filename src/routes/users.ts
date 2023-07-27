@@ -1,15 +1,20 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from 'express'
-import { saveUser, getAllUsers, getUserById, updateUser } from '../controllers/users'
+import { signUpUser, getAllUsers, getUserById, updateUser } from '../controllers/users'
+import { validateJWT } from '../middlewares/validate-jwt'
 
 const router = Router()
 
-router.get('/', getAllUsers)
+// Get an array of all users.
+router.get('/', validateJWT, getAllUsers)
 
-router.get('/:identifier', getUserById)
+// Get a single user by his id (JWT Required).
+router.get('/:identifier', validateJWT, getUserById)
 
-router.post('/', saveUser)
+// Register a new user
+router.post('/', signUpUser)
 
-router.put('/:identifier', updateUser)
+// Update user profile (JWT and User id Required).
+router.put('/:identifier', validateJWT, updateUser)
 
 export default router
