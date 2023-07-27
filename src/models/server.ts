@@ -29,7 +29,7 @@ export default class AppServer {
 
   async connectDB (): Promise<void> {
     try {
-      await database.authenticate()
+      await database.sync()
       console.log('Connection has been established successfully.')
     } catch (err) {
       console.error('Unable to connect to the database:', err)
