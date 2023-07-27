@@ -12,6 +12,28 @@ export const getAllIcons = async (_req: Request, res: Response): Promise<void> =
   }
 }
 
+export const getIconByName = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { icon_name: name } = req.params
+
+    const icon = await Icon.findOne({
+      where: {
+        name
+      }
+    })
+
+    if (icon === null) {
+      throw new Error('Resource not found')
+    }
+
+    res.json({ icon })
+  } catch (e) {
+    res.status(404).json({
+      msg: (e as Error).message
+    })
+  }
+}
+
 export const saveIcon = async (req: Request, res: Response): Promise<any> => {
   const { title, name, url, color, description, type, docs, usage } = req.body
 
