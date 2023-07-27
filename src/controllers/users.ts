@@ -56,7 +56,7 @@ export const saveUser = async (req: Request, res: Response): Promise<void> => {
     }
 
     const passwordEncrypted = encryptPassword(password)
-    const user = await User.create({ name, email, password: passwordEncrypted })
+    const user = await User.create({ name, email, password: passwordEncrypted, icons: [] })
 
     const userWithoutSensitiveInfo = getUserPublicData(user)
     res.status(201).json(userWithoutSensitiveInfo)
