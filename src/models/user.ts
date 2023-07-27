@@ -20,7 +20,7 @@ const User = database.define('User', {
   },
   state: {
     type: DataTypes.BOOLEAN(),
-    defaultValue: 1,
+    defaultValue: true,
     allowNull: false
   },
   icons: {
