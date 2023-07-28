@@ -34,7 +34,7 @@ export const getIconByName = async (req: Request, res: Response): Promise<void> 
   }
 }
 
-export const saveIcon = async (req: Request, res: Response): Promise<any> => {
+export const createIcon = async (req: Request, res: Response): Promise<any> => {
   const { title, name, url, color, description, type, docs, usage } = req.body
 
   try {
@@ -62,6 +62,40 @@ export const saveIcon = async (req: Request, res: Response): Promise<any> => {
     res.status(201).json({
       msg: 'Icon submitted to database',
       icon: result
+    })
+  } catch (error) {
+    return res.status(400).json({
+      msg: (error as Error).message
+    })
+  }
+}
+
+export const createIconType = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { name } = req.body
+
+    if (name === undefined || name === null) {
+      throw new Error('Type name is required')
+    }
+
+    if (typeof name !== 'string') {
+      throw new Error('Type name must be string')
+    }
+
+    const icon = await Icontypes.findOne({
+      where: {
+        name
+      }
+    })
+
+    if (icon !== null) {
+      throw new Error('Icon type already exist in the database')
+    }
+
+    const result = await Icontypes.create({ name })
+    res.status(201).json({
+      msg: 'Icon submitted to database',
+      icon_type: result
     })
   } catch (error) {
     return res.status(400).json({
