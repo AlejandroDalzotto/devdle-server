@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from 'express'
-import { signUpUser, getAllUsers, getUserById, updateUser } from '../controllers/users'
+import { signUpUser, getAllUsers, getUserById, updateUser, addIconDiscovered } from '../controllers/users'
 import { validateJWT } from '../middlewares/validate-jwt'
 
 const router = Router()
@@ -16,5 +16,7 @@ router.post('/', signUpUser)
 
 // Update user profile (JWT and User id Required).
 router.put('/:identifier', validateJWT, updateUser)
+
+router.put('/', validateJWT, addIconDiscovered)
 
 export default router

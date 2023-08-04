@@ -2,6 +2,7 @@ import type { Request, Response } from 'express'
 import User from '../models/user'
 import encryptPassword from '../helpers/encrypt-password'
 import { getUserPublicData, getUsersPublicData } from '../helpers/clear-user-information'
+import Icon from '../models/icon'
 
 export const getAllUsers = async (_req: Request, res: Response): Promise<void> => {
   try {
@@ -107,6 +108,60 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     res.status(200).json(user)
   } catch (e) {
     res.status(404).json({
+      msg: (e as Error).message
+    })
+  }
+}
+
+export const addIconDiscovered = async (req: Request, res: Response): Promise<void> => {
+  const { uid, name } = req.body as { uid: number, name: string }
+
+  try {
+    const icon = await Icon.findOne({
+      where: {
+        name: name.toLowerCase()
+      }
+    })
+
+    if (icon === null) {
+      throw new Error('The icon does not exist in the database')
+    }
+  } catch (e) {
+    res.status(400).json({
+      msg: (e as Error).message
+    })
+    return
+  }
+
+  try {
+    const userFromDB = await User.findOne({
+      where: {
+        id: uid
+      }
+    })
+
+    if (userFromDB === null) {
+      throw new Error('User does not exist')
+    }
+
+    const currentIcons = userFromDB?.get('icons') as string[]
+
+    if (!currentIcons.includes(name)) {
+      const nonRepeatingIcons = new Set([...currentIcons, name])
+      const newArrIcons = [...nonRepeatingIcons]
+
+      await User.update({ icons: newArrIcons }, {
+        where: {
+          id: uid
+        }
+      })
+
+      res.json({ user: userFromDB })
+    } else {
+      throw new Error('The icon has already been discovered')
+    }
+  } catch (e) {
+    res.status(400).json({
       msg: (e as Error).message
     })
   }
